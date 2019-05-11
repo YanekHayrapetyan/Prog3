@@ -145,10 +145,11 @@ function draw() {
         HunterAppear();
     }
     for (var i in BeastArr) {
+          BeastArr[i].move();
         BeastArr[i].eat();
-        
         BeastArr[i].mul();
-        BeastArr[i].move();
+      
+        BeastArr[i].die(i);
         BeastMasterAppear();
     }
     for (var i in BeastMasterArr) {
@@ -156,7 +157,6 @@ function draw() {
 
         BeastMasterArr[i].move();
         BeastMasterArr[i].getpets();
-       
         BeastMasterArr[i].die(i);
 
     }
@@ -204,30 +204,4 @@ if (timer==0){
 
 }
 
-function BeastMasterAppear(){
-if ( BeastMasterArr.length<5 && BeastArr.length!=0  ){
-   
-    var x =BeastArr[0].x;
-    var y=BeastArr[0].y;
-    BeastArr.shift();
-matrix[y][x]=0;
-var newbeasrmaster=new BeastMaster(x,y,4);
-BeastMasterArr.push(newbeasrmaster);
-matrix[y][x]=4;
-}
 
-
-}
-function HunterAppear(){
-    if (HunterArr.length<5 && grassEaterArr.length!=0){
-        var x =grassEaterArr[0].x;
-    var y=grassEaterArr[0].y;
-    grassEaterArr.shift();
-    matrix[y][x]=0;
-    var newhunter=new Hunter(x,y,5);
-HunterArr.push(newhunter);
-matrix[y][x]=5;
-
-    }
-   
-}
