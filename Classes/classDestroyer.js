@@ -1,20 +1,18 @@
 
-//////////////////////DESTROYER/////////////////////
+let random = require("./random.js");
 
-
-class Destroyer{
-
+module.exports=class Destroyer{
     constructor(x, y, index) {
         this.x = x;
         this.y = y;
         this.index = index;
         this.energy =20;
-    this.points=0
-    this.timer=30;
-    this.away=false
-    
-    }
-    getNewCoordinates(count) {
+this.points=0
+this.timer=30;
+this.away=false
+ 
+}
+getNewCoordinates(count) {
     var arr=[]
     this.directions=[]
     for (var i=-count;i<=count;i++){
@@ -25,15 +23,15 @@ class Destroyer{
         arr[1]=this.y+j
         this.directions.push(arr)
     }
-    }
-    }
-    }
-    chooseCell(size) {
-    
-    
-    this.getNewCoordinates(size);
-    var found = [];
-    for (var i in this.directions) {
+  }
+}
+}
+chooseCell(size) {
+
+
+this.getNewCoordinates(size);
+var found = [];
+for (var i in this.directions) {
     var x = this.directions[i][0];
     var y = this.directions[i][1];
     if (x >= 0 && x < matrix[0].length  && y >= 0 && y < matrix.length && matrix[y][x]<=9  ) {
@@ -43,85 +41,94 @@ class Destroyer{
      
         
     }
-    
-    }
-    return found;
-    }
-    move(){
-    var newCell = random(this.chooseCell(2));
+
+}
+return found;
+}
+move(){
+    statistics.points.destroyer=this.points
+var newCell = random(this.chooseCell(2));
        
-    
+
         if (newCell && matrix[newCell[1]][newCell[0]]<=9) {
      
             var newX = newCell[0];
             var newY = newCell[1];
-    matrix[newY][newX] = 0;
+   matrix[newY][newX] = 0;
               
                 for (var i in grassArr) {
                     if (newX == grassArr[i].x && newY ==grassArr[i].y) {
                         grassArr.splice(i, 1);
                         this.points-=1;
-                        break;
+                        statistics.dead.grass++
+                        statistics.killed.destroyer++
                  }
                 }
                 for (var i in grassEaterArr) {
                     if (newX == grassEaterArr[i].x && newY == grassEaterArr[i].y) {
                         grassEaterArr.splice(i, 1);
                         this.points+=4;
-                        break;
+                        statistics.dead.grasseater++
+                        statistics.killed.destroyer++
                     }
                 }
                 for(var i in BeastArr){
                     if (newX==BeastArr[i].x && newY==BeastArr[i].y){
                         BeastArr.splice(i,1)
                         this.points+=6;
-                    break;
+                        statistics.dead.beast++
+                        statistics.killed.destroyer++
                     }
                 }
                 for(var i in BeastMasterArr){
                     if (newX==BeastMasterArr[i].x && newY==BeastMasterArr[i].y){
                         BeastMasterArr.splice(i,1)
                         this.points+=16;
-                    break;
+                        statistics.dead.beastmaster++
+                        statistics.killed.destroyer++
                     }
                 }
                 for(var i in HunterArr){
                     if (newX==HunterArr[i].x && newY==HunterArr[i].y){
                         HunterArr.splice(i,1);
                         this.points+=20;
-                        break;
+                        statistics.dead.hunter++
+                        statistics.killed.destroyer++
                     }
                 }
-              }
-    
-            matrix[this.y][this.x] = 0;
-            matrix[newY][newX] = this.index;
+                matrix[this.y][this.x] = 0;
+            matrix[newCell[1]][newCell[0]] = 6;
             this.y = newY;
             this.x = newX;
             this.destroy();
             this.energy--;
         
             this.return();
-    
+ 
+              }
+  
+           
     }
+
+return(){
     
-    return(){
     if (this.energy<=0){
-        matrix[this.y][this.x]=0
-        CastleArr[0].points=this.points
-        DestroyerArr.splice(0,1)
-       
+        this.points=0
         
+        CastleArr[0].points=this.points
+        matrix[this.y][this.x]=0
+        DestroyerArr.splice(0,1)   
+        statistics.points.destroyer=this.points 
+        statistics.dead.destroyer++
     }
-    }
-    
-    destroy(){
+}
+
+destroy(){
+    statistics.points.destroyer=this.points
     var newCell = this.chooseCell(3);
-    
-    
-    if (newCell) {
+  if (newCell) {
     for (var i in newCell){
-    
+
         var newX = newCell[i][0];
         var newY = newCell[i][1];
       
@@ -132,41 +139,47 @@ class Destroyer{
             if (newX == grassArr[i].x && newY ==grassArr[i].y) {
                 grassArr.splice(i, 1);
                 this.points-=1;
-                break;
+                statistics.dead.grass++
+                statistics.killed.destroyer++
          }
         }
         for (var i in grassEaterArr) {
             if (newX == grassEaterArr[i].x && newY == grassEaterArr[i].y) {
                 grassEaterArr.splice(i, 1);
                 this.points+=4;
-                break;
+                statistics.dead.grasseater++
+                statistics.killed.destroyer++
+                 
             }
         }
         for(var i in BeastArr){
             if (newX==BeastArr[i].x && newY==BeastArr[i].y){
                 BeastArr.splice(i,1)
                 this.points+=6;
-            break;
+                statistics.dead.beast++
+                statistics.killed.destroyer++
+             
             }
         }
         for(var i in BeastMasterArr){
             if (newX==BeastMasterArr[i].x && newY==BeastMasterArr[i].y){
                 BeastMasterArr.splice(i,1)
                 this.points+=16;
-            break;
+                statistics.dead.beastmaster++
+                statistics.killed.destroyer++
+             
             }
         }
         for(var i in HunterArr){
             if (newX==HunterArr[i].x && newY==HunterArr[i].y){
                 HunterArr.splice(i,1);
                 this.points+=20;
-                break;
+                statistics.dead.hunter++
+                statistics.killed.destroyer++
+                 
             }
         }
       }
-    }
-    }
-    }
-    
-
-
+}
+}
+}

@@ -1,0 +1,24 @@
+{
+  "name": "prog3",
+  "version": "1.0.0",
+  "description": "GameOfLife",
+  "main": "script.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/YanekHayrapetyan/Prog3.git"
+  },
+  "author": "Yanek",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/YanekHayrapetyan/Prog3/issues"
+  },
+  "homepage": "https://github.com/YanekHayrapetyan/Prog3#readme",
+  "dependencies": {
+    "express": "^4.17.0",
+    "socket.io": "^2.2.0"
+  }
+}

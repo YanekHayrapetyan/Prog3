@@ -1,27 +1,59 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <style> .legend-color {width: 30px;height: 30px;} td {border: 1px solid black; font-size: 14px; padding-left: 5px;}</style>
-	<title></title>
-	<meta charset="utf8">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.5.14/p5.js"></script>
-    <script src="Functions.js"></script>
-  
-    <script src="Classes/ClassSuper.js"></script>
-    <script src="Classes/classGrass.js"></script>
-    <script src="Classes/classGrassEater.js"></script>
-    <script src="Classes/classBeast.js"></script>
-    <script src="Classes/classBeastMaster.js"></script>
-    <script src="Classes/classHunter.js"></script>
-    <script src="Classes/classDestroyer.js"></script>
-    <script src="Classes/classCastle.js"></script>
 
-    
-	  <script src="script.js"></script>
+<head>
+        <script src="https://code.jquery.com/jquery-3.3.1.js" integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60=" crossorigin="anonymous"></script>
+    <style>
+        .legend-color {
+            width: 30px;
+            height: 30px;
+        }
+
+        td {
+            border: 1px solid black;
+            font-size: 14px;
+            padding-left: 5px;
+        }
+            span {
+			display: inline-block;
+			color: rgb(78, 3, 47);
+           
+			font-size: 50px;
+		}
+
+		#weather {
+			margin: 0;
+			display: inline-block;
+		}
+
+		.tools {
+			font-size: 1.7em;
+			display: inline-block;
+			margin: 5px;
+
+		}
+
+		.weatherDiv {
+			margin-bottom: 10px;
+		}
+
+		button {
+			color: rgb(0, 168, 126);
+            
+			font-size: 23px;
+		}
+        
+    </style>
+    <title></title>
+    <meta charset="utf8">
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.5.14/p5.js"></script>
+    <script src="script.js"></script>
 </head>
+
 <body>
-	<hr>
-	<table id="legend">
+       
+    <div><table id="legend">
         <tr>
             <td class="legend-color">Գույն</td>
             <td>Անվանում</td>
@@ -30,7 +62,7 @@
             <td>Բազմանում է</td>
             <td>Սատկում է</td>
             <td>Հավելյալ </td>
-     
+
         </tr>
 
         <tr>
@@ -74,9 +106,11 @@
             <td>Գիշատիչների Տիրակալ</td>
             <td>Մոտակա 48 դատարկ վանդակներում կամ խոտերի վրայով, էներգիան քչանում է 1֊ով</td>
             <td></td>
-            <td>Սկզբում քանակը պատահական է, ապա նվազում է:Նրանք ավելանում են քանի դեռ կան գիշատիչներ և քանակը չի կարող գերազանցում 5-ը:Նորերը Հայտնովում են ՚Ամենածեր՚ Գիշատիչների փոխարեն</td>
-          
-            <td>Սատկում է, երբ էներգիան փոքր է 0֊ից, շրջակայքում գտնվող խոտակերներից պատահական մեկին դարձնում է գիշատիչ</td>
+            <td>Սկզբում քանակը պատահական է, ապա նվազում է:Նրանք ավելանում են քանի դեռ կան գիշատիչներ և քանակը չի կարող
+                գերազանցում 5-ը:Նորերը Հայտնովում են ՚Ամենածեր՚ Գիշատիչների փոխարեն</td>
+
+            <td>Սատկում է, երբ էներգիան փոքր է 0֊ից, շրջակայքում գտնվող խոտակերներից պատահական մեկին դարձնում է գիշատիչ
+            </td>
             <td>Իր շրջակայքում գտնվող գիշատիչներից պատահական մեկին ընտելացնում և դարձնում է խոտակեր</td>
         </tr>
         <tr>
@@ -84,10 +118,13 @@
             <td>Որսորդ</td>
             <td>Մոտակա 48 դատարկ վանդակներում կամ խոտերի վրայով, էներգիան քչանում է 1֊ով</td>
             <td></td>
-            <td>Սկզբում քանակը պատահական է, ապա նվազում է:Նրանք ավելանում են քանի դեռ կան խոտակերներ քանակը չի գերազանցում 5-ը:Նորերը Հայտնովում են ՚Ամենածեր՚ Խոտակերների փոխարեն</td>
-          
-            <td>Սատկում է, երբ էներգիան փոքր է 0֊ից, 8 վանդակ շրջակայքում գտնվող խոտերի և դատարկ վանդակների վրա հայտնվում են գիշատիչներ</td>
-            <td>Սպանում է 80 վանդակ շրջակայքում գտնվող խոտակերներից կամ գիշատիչներից մեկին ամեն 3 տակտը մեկ,եթե մինչև էներգիան վերջանալը հասցնում է սպանել 15 գիշատիչ/խոտակեր, ապա աշխարհից հեռանում է</td>
+            <td>Սկզբում քանակը պատահական է, ապա նվազում է:Նրանք ավելանում են քանի դեռ կան խոտակերներ քանակը չի
+                գերազանցում 5-ը:Նորերը Հայտնովում են ՚Ամենածեր՚ Խոտակերների փոխարեն</td>
+
+            <td>Սատկում է, երբ էներգիան փոքր է 0֊ից, 8 վանդակ շրջակայքում գտնվող խոտերի և դատարկ վանդակների վրա
+                հայտնվում են գիշատիչներ</td>
+            <td>Սպանում է 80 վանդակ շրջակայքում գտնվող խոտակերներից կամ գիշատիչներից մեկին ամեն 3 տակտը մեկ,եթե մինչև
+                էներգիան վերջանալը հասցնում է սպանել 15 գիշատիչ/խոտակեր, ապա աշխարհից հեռանում է</td>
         </tr>
         <tr>
             <td class="legend-color" style="background-color:darkcyan"></td>
@@ -95,20 +132,126 @@
             <td></td>
             <td>Ստանում է ավերիչի հավաքած միավորները</td>
             <td></td>
-          
+
             <td>Գտնվում է աշխարհի կենտրոնում և զբաղեցնում է գոնե 1 վանդակ</td>
-            <td>Ամեն 50 միավորի դիմաց այն մեծանում է 1 վանդակ շրջակայքով, իսկ երբ միավորները -50-ից փոքր են` փոքրանում է 1 վանդակով</td>
+            <td>Ամեն 50 միավորի դիմաց այն մեծանում է 1 վանդակ շրջակայքով, իսկ երբ միավորները -50-ից փոքր են` փոքրանում է
+                1 վանդակով</td>
         </tr>
         <tr>
             <td class="legend-color" style="background-color:black"></td>
             <td>Կործանիչ</td>
             <td>Մոտակա 24 վանդակներում ամեն ինչի վրայով, էներգիան քչանում է 1֊ով</td>
             <td></td>
-            <td>Հայտնվում է յուրաքանչյուր 30 տակտը մեկ անգամ:Դադարում է հայտնվելը, երբ ամեն ինչ, բացի ամրոցից և խոտից վերանում է</td>
-          
-            <td>Վերադառնում է ամրոց, երբ էներգիան փոքր է 0֊ից,Վերադառնալուց հետո հավաքած միավորները փոխանցում է ամրոցի ֆոնդ</td>
-            <td>Վերացնում է 48 վանդակ շրջակայքում գտնվող ամեն ինչ, բացի ամրոցից և յուրաքանչյուր վերացրածի համար ստանում է միավորներ` խոտ(-1),խոտակեր(4),գիշատիչ(6),գիշատիչների տիրակալ(16),որսորդ(20)</td>
+            <td>Հայտնվում է յուրաքանչյուր 30 տակտը մեկ անգամ:Դադարում է հայտնվելը, երբ ամեն ինչ, բացի ամրոցից և խոտից
+                վերանում է</td>
+
+            <td>Վերադառնում է ամրոց, երբ էներգիան փոքր է 0֊ից,Վերադառնալուց հետո հավաքած միավորները փոխանցում է ամրոցի
+                ֆոնդ</td>
+            <td>Վերացնում է 48 վանդակ շրջակայքում գտնվող ամեն ինչ, բացի ամրոցից և յուրաքանչյուր վերացրածի համար ստանում
+                է միավորներ` խոտ(-1),խոտակեր(4),գիշատիչ(6),գիշատիչների տիրակալ(16),որսորդ(20)</td>
         </tr>
     </table>
+</div> 
+<div class="weatherDiv">
+                <span>Weather:</span>
+                <p id="weather" style="color:grcolor;font-size:50px;"></p>
+            </div>
+    <hr>
+    
+    <div class="tools">
+        <h1 style="color:rgb(0, 155, 116)">Tools</h1>
+        <ul>
+            <li>
+                <button onclick="killAll()">Kill EveryThing</button>
+            </li>
+            <li>
+                <button onclick="pushGrasses()">Push Grasses</button>
+            </li>
+            <li>
+                <button onclick="pushGrassEaters()">Push GrassEaters</button>
+            </li>
+            <li>
+                <button onclick="pushBeasts()">Push Beasts</button>
+            </li>
+        </ul>
+    </div>
+    <table border="1" id="table_statistics">
+         
+		<tr class="heading_table">
+			<th></th>
+			<th>Grass</th>
+            <th>GrassEater</th>
+            <th>Beast</th>
+            <th>BeastMaster</th>
+            <th>Hunter</th>
+            <th>Destroyer</th>
+            <th>Castle</th>
+		</tr>
+		<tr>
+			<td>Count</td>
+			<td id="grNum"></td>
+			<td id="grEaNum"></td>
+            <td id="BeastNum"></td>
+            <td id="BeastMasterNum"></td>
+            <td id="HunterNum"></td>
+            <td id="DestroyerNum"></td>
+            <td id="CastleNum"></td>
+		</tr>
+		<tr>
+			<td>Dead/Leaved</td>
+			<td></td>
+			<td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td>We Don't Die</td>
+		</tr>
+		
+		<tr>
+			<td>Born</td>
+			<td></td>
+			<td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td>1</td>
+		</tr>
+		<tr>
+			<td>Killed/Eaten/Destroyed</td>
+            <td>We Don't Kill</td>
+            
+			<td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>
+			<td>Points</td>
+			<td>No Points</td>
+			<td>No Points</td>
+            <td>No Points</td>
+            <td>No Points</td>
+            <td>No Points</td>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>
+			<td>Growth Stage</td>
+			<td>---------------</td>
+			<td>---------------</td>
+            <td>-----------</td>
+            <td>----------------</td>
+            <td>-----------</td>
+            <td>-------------</td>
+            <td></td>
+        </tr>
+        
+	</table>
+    <script type="text/javascript" src="./script.js"></script>
 </body>
+
 </html>

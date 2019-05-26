@@ -1,207 +1,228 @@
 
-var matrix = [];
-var n =29
-// stex zangvacnery verjum Arr barov
-var grassArr = [];
-var grassEaterArr = [];
-var BeastArr=[];
-var BeastMasterArr=[];
-var HunterArr=[];
-var DestroyerArr=[];
-var CastleArr=[];
-var end=false
-var side = 20;
-var timer=30
-var chance=[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2,2,2,2,2,3,4,5]
-let castle;
-function setup() {
-    castle = loadImage('img/Castle.png');
-    grassImg = loadImage('img/grass.png')
-beastImg=loadImage('img/Beast.png')
-grassEaterImg=loadImage('img/grasseater.png')
-hunterImg=loadImage('img/hunter.png')
-beastmasterImg=loadImage('img/beastmaster.png')
-destroyerImg=loadImage('img/destroyer.png')
-    frameRate(8);
-    
-    createCanvas(n* side, n * side);
-    background('#000');
-//random matrix
-    for (var y = 0; y < n; y++) {
-        matrix[y]=[]
-        for (var x = 0; x < n; x++) {
-           matrix[y][x]=chance[Math.floor(random(chance.length))]
-        }
+let socket = io();
+let n = 15
+let side = 30;
+matrix = []
+socket.on("data", drawCreatures);
+
+
+socket.on('Stats', function (statistics) {
+    let table = document.getElementById('table_statistics');
+    for (let j = 1; j <= 7; j++) {
+        table.rows[1].cells[j].innerHTML = statistics.ArrLens[j - 1]
+
     }
-/////////////////////CASTLE///////////////
-var a=Math.floor(n/2)
-var b=Math.floor(n/2)
-    matrix[b][a]=10
- var newcastle= new Castle(a,b,10);
-CastleArr.push(newcastle);
-/////////////////////////////////////////
+    table.rows[2].cells[1].innerHTML = statistics.dead.grass
+    table.rows[2].cells[2].innerHTML = statistics.dead.grasseater
+    table.rows[2].cells[3].innerHTML = statistics.dead.beast
+    table.rows[2].cells[4].innerHTML = statistics.dead.beastmaster
+    table.rows[2].cells[5].innerHTML = statistics.dead.hunter
+    table.rows[2].cells[6].innerHTML = statistics.dead.destroyer
+    table.rows[2].cells[7].innerHTML = statistics.dead.castle
 
-    matrix[Math.floor(random(n))][Math.floor(random(n))]=6
-    console.log(matrix)
-    for (var y = 0; y < matrix.length; y++) {
-        for (var x = 0; x < matrix[y].length; x++) {
 
-            if (matrix[y][x] == 1) {
-                var gr = new Grass(x, y, 1);
-                grassArr.push(gr);
-            }
-            else if (matrix[y][x] == 2) {
-                var et = new GrassEater(x,y,2);
-                grassEaterArr.push(et);
-                
-            }
-            else if (matrix[y][x]==3){
-                var beast=new Beast(x,y,3);
-                BeastArr.push(beast);
-            }
-            else if (matrix[y][x]==4){
-                var beastmaster=new BeastMaster(x,y,4);
-                BeastMasterArr.push(beastmaster);
-            }
-            else if (matrix[y][x]==5){
-                var hunter=new Hunter(x,y,5);
-               HunterArr.push(hunter);
-            }   
-            else if (matrix[y][x]==6){
-                var newdestroyer=new Destroyer(x,y,6);
-               DestroyerArr.push(newdestroyer);
-               
-        
+
+    table.rows[3].cells[1].innerHTML = statistics.born.grass
+    table.rows[3].cells[2].innerHTML = statistics.born.grasseater
+    table.rows[3].cells[3].innerHTML = statistics.born.beast
+    table.rows[3].cells[4].innerHTML = statistics.born.beastmaster
+    table.rows[3].cells[5].innerHTML = statistics.born.hunter
+    table.rows[3].cells[6].innerHTML = statistics.born.destroyer
+
+
+    table.rows[4].cells[1].innerHTML = statistics.killed.grass
+    table.rows[4].cells[2].innerHTML = statistics.killed.grasseater
+    table.rows[4].cells[3].innerHTML = statistics.killed.beast
+    table.rows[4].cells[4].innerHTML = statistics.killed.beastmaster
+    table.rows[4].cells[5].innerHTML = statistics.killed.hunter
+    table.rows[4].cells[6].innerHTML = statistics.killed.destroyer
+    table.rows[4].cells[7].innerHTML = statistics.killed.castle
+
+    table.rows[5].cells[6].innerHTML = statistics.points.destroyer
+    table.rows[5].cells[7].innerHTML = statistics.points.castle
     
-            }   
-        
 
-        }
-    }
- 
+    table.rows[6].cells[7].innerHTML = statistics.stage.castle
+})
+
+function killAll() {
+    socket.emit("kill");
 }
 
-function draw() {
+function pushGrasses() {
+    socket.emit('pushGrasses')
+}
+function pushGrassEaters() {
+    socket.emit('pushGrassEaters')
+}
+function pushGrassEaters() {
+    socket.emit('pushGrassEaters')
+}
+function pushBeasts() {
+    socket.emit('pushBeasts')
+}
+function setup() {
 
-    for (var y = 0; y < matrix.length; y++) {
-        for (var x = 0; x < matrix[y].length; x++) {
+
+    //////////////////////IMAGES//////////////////
+    // castle = loadImage('img/Castle.png');
+    // beastImg = loadImage('img/Beast.png')
+    // grassEaterImg = loadImage('img/grasseater.png')
+    // hunterImg = loadImage('img/hunter.png')
+    // beastmasterImg = loadImage('img/beastmaster.png')
+    // destroyerImg = loadImage('img/destroyer.png')
+    ///////////////////////////////////////////////
+    createCanvas(n * side, n * side)
+    //! clearing background by setting it to new grey color
+    background('#acacac');
+}
+
+function drawCreatures(data) {
+    matrix = data.matrix
+    season = data.weather
+    var weatherP = document.getElementById("weather")
+    weatherP.innerHTML =season
+    console.log(data.weather)
+    for (let y = 0; y < matrix.length; y++) {
+        for (let x = 0; x < matrix[y].length; x++) {
 
             if (matrix[y][x] == 1) {
-                fill(150,200,0);
-                rect(x * side, y * side, side, side);
-                // image(grassImg,x * side, y * side, side, side)
-            }
-            else if (matrix[y][x] == 2) {
-                fill("orange");
-                rect(x * side, y * side, side, side);
-                image(grassEaterImg,x * side, y * side, side, side)
+                if (season == "Գարուն") {
+                    grcol="RGB(0, 200, 0)";
+                    fill(grcol)
+                }
+                else if (season == "Ամառ") {
+                    grcol="RGB(0, 155, 0)";
+
+                    fill(grcol)
+                }
+
+                else if (season == "Աշուն") {
+                    grcol="RGB(100, 25, 0)";
+                    fill(grcol)
+
+                }
+                else if (season == "Ձմեռ") {
+                    grcol="RGB(200, 200, 240)"
+                    fill(grcol)
+                }
+         fill(grcol)
             }
 
-            else if (matrix[y][x]==3){
-                fill("red");
-                rect(x * side, y * side, side, side);
-                image(beastImg,x * side, y * side, side, side)
+            else if (matrix[y][x] == 2) {
+                if (season == "Գարուն") {
+                   gretcol= "RGB(255, 200, 0)";
+                   fill(gretcol)
+                }
+                else if (season == "Ամառ") {
+                    gretcol= "RGB(255, 155, 0)"
+          
+                }
+
+                else if (season == "Աշուն") {
+                    gretcol=("orange");
+                    
+                }
+                else if (season == "Ձմեռ") {
+                    gretcol= "RGB(255, 100, 0)"
+                  
+                }
+                fill(gretcol)
+          
+                // image(grassEaterImg, x * side, y * side, side, side)
             }
-            else if (matrix[y][x]==4){
-                fill(100,50,130);
-                rect(x * side, y * side, side, side);
-                image(beastmasterImg,x * side, y * side, side, side)
+            else if (matrix[y][x] == 3) {
+                if (season == "Գարուն") {
+                    bcolor="RGB(255, 0, 0)";
+
+                }
+                else if (season == "Ամառ") {
+                    
+                    bcolor="RGB(200, 20, 0)"
+                }
+
+                else if (season == "Աշուն") {
+                   
+                    bcolor="RGB(200, 45, 0)"
+                }
+                else if (season == "Ձմեռ") {
+                 
+                    bcolor="RGB(255, 10, 10)"
+                }
+                fill(bcolor)
+                
+                // image(beastImg, x * side, y * side, side, side)
             }
-            else if (matrix[y][x]==5){
-                fill("White");
-                rect(x * side, y * side, side, side);
-                image(hunterImg,x * side, y * side, side, side)
+
+            else if (matrix[y][x] == 4) {
+                fill(100, 50, 130);
+              
+                // image(beastmasterImg, x * side, y * side, side, side)
             }
-            else if (matrix[y][x]==10){
-                fill("darkcyan");
-                rect(x * side, y * side, side, side);
-                image(castle,x * side, y * side, side, side)
+            else if (matrix[y][x] == 5) {
+
+                if (season == "Գարուն") {
+                    hcolor="RGB(200, 255, 200)"
+                  
+
+                }
+                else if (season == "Ամառ") {
+                   
+                    hcolor="RGB(150, 255, 150)"
+                }
+
+                else if (season == "Աշուն") {
+                 
+                    hcolor="RGB(255, 255, 150)"
+                }
+                else if (season == "Ձմեռ") {
+                    
+                    hcolor="RGB(235, 255, 255)"
+                }
+                fill(hcolor)
+               
+                // image(hunterImg, x * side, y * side, side, side)
             }
-           
-            else if (matrix[y][x]==6){
-                fill(20,20,20);
-                rect(x * side, y * side, side, side);
-                image(destroyerImg,x * side, y * side, side, side)
+            else if (matrix[y][x] == 10) {
+
+                if (season == "Գարուն") {
+                    ccolor="RGB(0, 175, 175)";
+
+                }
+                else if (season == "Ամառ") {
+                    ccolor="RGB(10, 150, 150)";
+                 
+                }
+
+                else if (season == "Աշուն") {
+                    ccolor="RGB(20, 100, 100)";
+                 
+                }
+                else if (season == "Ձմեռ") {
+                    ccolor="RGB(0, 200, 255)";
+                   
+                }
+                fill(ccolor)
+                
+                // image(castle, x * side, y * side, side, side)
+            }
+
+            else if (matrix[y][x] == 6) {
+                fill(0, 0, 0);
+            
+                // image(destroyerImg, x * side, y * side, side, side)
             }
             else if (matrix[y][x] == 0) {
-                fill(50,50,50);
-                rect(x * side, y * side, side, side);
+                fill(50, 50, 50);
+
             }
-            else if (matrix[y][x]==undefined){
-                matrix[y][x]=0
-            }
+            rect(x * side, y * side, side, side);
         }
     }
 
-    
-    for (var i in grassArr) {
-        grassArr[i].mul();
-    }
-     for (var i in grassEaterArr) {
-        grassEaterArr[i].move();
-        grassEaterArr[i].eat();
-        grassEaterArr[i].mul();
-        grassEaterArr[i].die(i);
-        HunterAppear();
-    }
-    for (var i in BeastArr) {
-          BeastArr[i].move();
-        BeastArr[i].eat();
-        BeastArr[i].mul();
-      
-        BeastArr[i].die(i);
-        BeastMasterAppear();
-    }
-    for (var i in BeastMasterArr) {
-       
-
-        BeastMasterArr[i].move();
-        BeastMasterArr[i].getpets();
-        BeastMasterArr[i].die(i);
-
-    }
-    for(var i in HunterArr){
-        HunterArr[i].move();
-        HunterArr[i].kill();
-        HunterArr[i].die(i);
-    }
- 
-    for(var i in DestroyerArr){
-        
-        DestroyerArr[i].move();
-     
-    }
-    if (end==true){
-    textSize(n*2);
-   fill(255,100,100);
-    text("The End!",n*side/10,n*side/2)
-    }
-
-  
-        
-        CastleArr[0].grow();
-
-    
-if (DestroyerArr.length==0 && end==false){
-timer-=1;
-if (timer==0){
-   timer=30;
-    var x= Math.floor(random(n));
-   var y=Math.floor(random(n));
-   while(matrix[y][x]>=10 ){
-       x=Math.floor(random(n));
-       y=Math.floor(random(n));
-   }
-   
-   var newdestroyer=new Destroyer(x,y,6);
-   DestroyerArr.push(newdestroyer);
-   matrix[y][x]=6;
-}
-}
- if (grassEaterArr.length==0 && HunterArr.length==0 && BeastArr.length==0 && BeastMasterArr.length==0){
-        end=true  ;
-    }
 
 }
+
+
 
 
