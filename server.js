@@ -1,6 +1,6 @@
 
 
-let n = 15
+let n = 25
 gb=0
 matrix = [];
 grassArr = [];

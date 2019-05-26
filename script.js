@@ -1,7 +1,7 @@
 
-let socket = io();
-let n = 15
-let side = 30;
+ socket = io();
+ n = 25
+side = 30;
 matrix = []
 socket.on("data", drawCreatures);
 
@@ -18,7 +18,7 @@ socket.on('Stats', function (statistics) {
     table.rows[2].cells[4].innerHTML = statistics.dead.beastmaster
     table.rows[2].cells[5].innerHTML = statistics.dead.hunter
     table.rows[2].cells[6].innerHTML = statistics.dead.destroyer
-    table.rows[2].cells[7].innerHTML = statistics.dead.castle
+    
 
 
 
@@ -30,7 +30,6 @@ socket.on('Stats', function (statistics) {
     table.rows[3].cells[6].innerHTML = statistics.born.destroyer
 
 
-    table.rows[4].cells[1].innerHTML = statistics.killed.grass
     table.rows[4].cells[2].innerHTML = statistics.killed.grasseater
     table.rows[4].cells[3].innerHTML = statistics.killed.beast
     table.rows[4].cells[4].innerHTML = statistics.killed.beastmaster
@@ -73,7 +72,7 @@ function setup() {
     // destroyerImg = loadImage('img/destroyer.png')
     ///////////////////////////////////////////////
     createCanvas(n * side, n * side)
-    //! clearing background by setting it to new grey color
+  
     background('#acacac');
 }
 
@@ -83,28 +82,36 @@ function drawCreatures(data) {
     var weatherP = document.getElementById("weather")
     weatherP.innerHTML =season
     console.log(data.weather)
+    if (season == "Գարուն") {
+        document.getElementById('weatherDiv').style.backgroundColor = "RGB(76, 175, 80)";
+
+    }
+    else if (season == "Ամառ") {
+        document.getElementById('weatherDiv').style.backgroundColor = "RGB(0, 155, 0)";
+    }
+    else if (season == "Աշուն") {
+        document.getElementById('weatherDiv').style.backgroundColor = "RGB(100, 25, 0)";
+    }
+    else if (season == "Ձմեռ") {
+        document.getElementById('weatherDiv').style.backgroundColor = "RGB(200, 200, 240)";
+    }
+
     for (let y = 0; y < matrix.length; y++) {
         for (let x = 0; x < matrix[y].length; x++) {
 
             if (matrix[y][x] == 1) {
                 if (season == "Գարուն") {
-                    grcol="RGB(0, 200, 0)";
-                    fill(grcol)
+                    grcol="RGB(0, 200, 0)";   
                 }
                 else if (season == "Ամառ") {
-                    grcol="RGB(0, 155, 0)";
-
-                    fill(grcol)
+                    grcol="RGB(0, 155, 0)"; 
                 }
 
                 else if (season == "Աշուն") {
                     grcol="RGB(100, 25, 0)";
-                    fill(grcol)
-
                 }
                 else if (season == "Ձմեռ") {
-                    grcol="RGB(200, 200, 240)"
-                    fill(grcol)
+                    grcol="RGB(200, 200, 240)"      
                 }
          fill(grcol)
             }
@@ -151,13 +158,11 @@ function drawCreatures(data) {
                 }
                 fill(bcolor)
                 
-                // image(beastImg, x * side, y * side, side, side)
             }
 
             else if (matrix[y][x] == 4) {
                 fill(100, 50, 130);
-              
-                // image(beastmasterImg, x * side, y * side, side, side)
+    
             }
             else if (matrix[y][x] == 5) {
 
@@ -180,8 +185,7 @@ function drawCreatures(data) {
                     hcolor="RGB(235, 255, 255)"
                 }
                 fill(hcolor)
-               
-                // image(hunterImg, x * side, y * side, side, side)
+         
             }
             else if (matrix[y][x] == 10) {
 
@@ -203,14 +207,13 @@ function drawCreatures(data) {
                    
                 }
                 fill(ccolor)
-                
-                // image(castle, x * side, y * side, side, side)
+        
             }
 
             else if (matrix[y][x] == 6) {
                 fill(0, 0, 0);
             
-                // image(destroyerImg, x * side, y * side, side, side)
+                
             }
             else if (matrix[y][x] == 0) {
                 fill(50, 50, 50);

@@ -113,9 +113,10 @@ var newCell = random(this.chooseCell(2));
 return(){
     
     if (this.energy<=0){
-        this.points=0
+       
         
         CastleArr[0].points=this.points
+         this.points=0
         matrix[this.y][this.x]=0
         DestroyerArr.splice(0,1)   
         statistics.points.destroyer=this.points 
